@@ -1,55 +1,37 @@
 # Contributing to File Falcon Pro
 
-We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
+Thanks for helping out! Bug reports, ideas and pull requests are all welcome.
 
-- Reporting a bug
-- Discussing the current state of the code
-- Submitting a fix
-- Proposing new features
+## Reporting a bug
 
-## We Develop with Github
+[Open an issue](https://github.com/drobertson-dev/FileFalconPro/issues/new) and include:
 
-We use github to host code, to track issues and feature requests, as well as accept pull requests.
+- what you did, what you expected, and what happened instead;
+- your macOS version and how you run the app (built `.app` or from source);
+- the relevant lines from the log, found in
+  `~/Library/Application Support/File Falcon Pro/filefalcon.log`.
 
-## We Use [Github Flow](https://guides.github.com/introduction/flow/index.html), So All Code Changes Happen Through Pull Requests
+For duplicate-detection problems, a couple of example images (or a description of how they
+differ) help a lot.
 
-Pull requests are the best way to propose changes to the codebase. We actively welcome your pull requests:
+## Making a change
 
-1. Fork the repo and create your branch from `main`.
-2. If you've added code that should be tested, add tests.
-3. If you've changed APIs, update the documentation.
-4. Ensure the test suite passes.
-5. Make sure your code lints.
-6. Issue that pull request!
+1. Fork the repository and create a branch from `master`.
+2. Set up the project — see [docs/development.md](docs/development.md). In short:
+   `uv sync`, then `make run`.
+3. Make your change. Logic belongs in `operations/` (no Qt imports there) and should come
+   with tests in `tests/`; interface code lives in `gui/`.
+4. Run `make format` and `make test`.
+5. Update the docs in `docs/` and `CHANGELOG.md` if behaviour changes.
+6. Open a pull request describing what changed and why.
 
-## Any contributions you make will be under the MIT Software License
+## Style
 
-In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
-
-## Report bugs using Github's [issues](https://github.com/briandk/transcriptase-atom/issues)
-
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/yourusername/filefalconpro/issues/new); it's that easy!
-
-## Write bug reports with detail, background, and sample code
-
-Great Bug Reports tend to have:
-
-- A quick summary and/or background
-- Steps to reproduce
-- Be specific!
-- Give sample code if you can.
-- What you expected would happen
-- What actually happens
-
-## Use a Consistent Coding Style
-
-* 2 spaces for indentation rather than tabs
-* You can try running `npm run lint` for style unification
+The code is formatted with ruff using tabs and a 100-character line length. Prefer small,
+well-named functions, keep slow work off the UI thread (use `gui.workers.Task`), and never
+let a code path overwrite or delete a user's file without a way back.
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under its MIT License.
-
-## References
-
-This document was adapted from the open-source contribution guidelines for [Facebook's Draft](https://github.com/facebook/draft-js)
+By contributing, you agree that your contributions are licensed under the project's
+[MIT License](LICENSE).
