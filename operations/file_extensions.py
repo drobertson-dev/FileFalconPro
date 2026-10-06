@@ -1,109 +1,76 @@
 """
-File extension definitions for different media types.
-This module provides categorized lists of file extensions for use in the File Falcon Pro application.
+File categories for File Falcon Pro.
+
+Every extension belongs to exactly one category, so when sorting by type a file always
+has a single home folder. Extensions that are ambiguous (for example ``.ts``, which could
+be a TypeScript source file *or* an MPEG-TS video) are deliberately left out and fall
+into "Other".
 """
-from typing import Dict, List
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
 
 
-def _normalize_extensions(extensions: List[str]) -> List[str]:
-    """
-    Convert a list of extensions to include both lowercase and uppercase variants.
-    
-    Args:
-        extensions: List of file extensions in lowercase
-        
-    Returns:
-        List containing both lowercase and uppercase variants
-    """
-    # Return unique extensions (no duplicates) in lowercase only
-    # This is a better approach than manually including both cases
-    return sorted(list(set([ext.lower() for ext in extensions])))
+@dataclass(frozen=True)
+class Category:
+	"""A group of related file types, e.g. Photos or Videos."""
+
+	key: str
+	label: str
+	extensions: frozenset[str]
 
 
-# Video file extensions
-_VIDEO_ALL_RAW = [
-    ".flv", ".webm", ".vob", ".avi", ".wmv", ".m4p", ".m4v", ".mpg", ".mpeg",
-    ".3gp", ".mov", ".mp4", ".mkv", ".ogg", ".ogv", ".mts", ".m2ts", ".ts",
-    ".qt", ".yuv", ".rm", ".rmvb", ".asf", ".amv", ".mpv", ".mpe", ".m2v"
-]
-video_all = _normalize_extensions(_VIDEO_ALL_RAW)
+def _exts(names: str) -> frozenset[str]:
+	"""Turn a space-separated list of extensions into a set like {".jpg", ".png"}."""
+	return frozenset(f".{name.lower()}" for name in names.split())
 
-_VIDEO_BASIC_RAW = [
-    ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", ".3gp", ".webm", ".mpg", ".vob"
-]
-video_basic = _normalize_extensions(_VIDEO_BASIC_RAW)
 
-# Image file extensions
-_IMAGE_BASIC_RAW = [
-    ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".ico", ".jfif", ".webp", ".heic", ".svg"
-]
-image_basic = _normalize_extensions(_IMAGE_BASIC_RAW)
+RAW_PHOTO_EXTENSIONS = _exts("arw cr2 cr3 crw dng nef nrw orf pef raf raw rw2 sr2 srw x3f")
 
-_IMAGE_ALL_RAW = _IMAGE_BASIC_RAW + [
-    ".ai", ".eps", ".raw", ".indd", ".heif", ".pdf", ".psd", ".arw", ".cr2",
-    ".nrw", ".k25", ".orf", ".raf", ".pef", ".x3f", ".srw", ".dng"
-]
-image_all = _normalize_extensions(_IMAGE_ALL_RAW)
+# Formats Pillow can decode (with pillow-heif for HEIC), used by the duplicate finder.
+DECODABLE_IMAGE_EXTENSIONS = _exts("avif bmp gif heic heif jfif jpeg jpg png tif tiff webp")
 
-# Document file extensions
-_TEXT_RAW = [
-    ".doc", ".docx", ".txt", ".odt", ".rtf", ".pages", ".wpd"
-]
-text = _normalize_extensions(_TEXT_RAW)
+CATEGORIES: tuple[Category, ...] = (
+	Category("photos", "Photos", DECODABLE_IMAGE_EXTENSIONS | RAW_PHOTO_EXTENSIONS | _exts("ico")),
+	Category(
+		"videos",
+		"Videos",
+		_exts(
+			"3gp amv asf avi divx drc f4v flv m2ts m2v m4v mkv mov mp4 mpe mpeg mpg mpv mts mxf "
+			"ogm ogv qt r3d rm rmvb vob webm wmv y4m"
+		),
+	),
+	Category(
+		"audio",
+		"Audio",
+		_exts("aac aif aiff amr ape flac m4a m4b mid midi mp3 oga ogg opus wav wma"),
+	),
+	Category("documents", "Documents", _exts("doc docx epub markdown md odt pages rtf tex txt")),
+	Category("pdfs", "PDFs", _exts("pdf")),
+	Category("spreadsheets", "Spreadsheets", _exts("csv numbers ods tsv xls xlsb xlsm xlsx")),
+	Category("presentations", "Presentations", _exts("key odp pot potx pps ppsx ppt pptx")),
+	Category("design", "Design", _exts("ai eps fig indd psb psd qxp sketch svg xd")),
+	Category("archives", "Archives", _exts("7z bz2 dmg gz iso rar tar tgz xz zip")),
+	Category(
+		"data",
+		"Data & Web",
+		_exts("accdb db htm html json jsonl mdb rss sql sqlite sqlite3 xhtml xml yaml yml"),
+	),
+)
 
-_SPREADSHEET_RAW = [
-    ".xls", ".xlsx", ".ods", ".numbers", ".csv", ".tsv"
-]
-spreadsheet = _normalize_extensions(_SPREADSHEET_RAW)
+OTHER = Category("other", "Other", frozenset())
 
-_PRESENTATIONS_RAW = [
-    ".ppt", ".pptx", ".odp", ".key", ".pps"
-]
-presentations = _normalize_extensions(_PRESENTATIONS_RAW)
+ALL_CATEGORIES: tuple[Category, ...] = (*CATEGORIES, OTHER)
 
-_PDF_DOCUMENTS_RAW = [
-    ".pdf"
-]
-pdf_documents = _normalize_extensions(_PDF_DOCUMENTS_RAW)
+CATEGORY_BY_KEY: dict[str, Category] = {category.key: category for category in ALL_CATEGORIES}
 
-_JSON_DOCUMENTS_RAW = [
-    ".json", ".jsonl"
-]
-json_documents = _normalize_extensions(_JSON_DOCUMENTS_RAW)
-
-_LAYOUT_RAW = [
-    ".indd", ".psd", ".ai", ".eps"
-]
-layout = _normalize_extensions(_LAYOUT_RAW)
-
-_DATABASE_RAW = [
-    ".db", ".sqlite", ".sqlite3", ".mdb", ".accdb"
-]
-database = _normalize_extensions(_DATABASE_RAW)
-
-_DESIGN_RAW = [
-    ".psd", ".ai", ".indd", ".xd", ".sketch", ".fig"
-]
-design = _normalize_extensions(_DESIGN_RAW)
-
-_MARKUP_RAW = [
-    ".html", ".htm", ".xml", ".svg", ".md", ".markdown"
-]
-markup = _normalize_extensions(_MARKUP_RAW)
-
-# Create a mapping of categories to their extension lists for easy lookup
-CATEGORIES_MAP: Dict[str, List[str]] = {
-    "Video Basic": video_basic,
-    "Video All": video_all,
-    "Image Basic": image_basic,
-    "Image All": image_all,
-    "Text": text,
-    "JSON": json_documents,
-    "Spreadsheet": spreadsheet,
-    "PDF": pdf_documents,
-    "Presentations": presentations,
-    "Layout": layout,
-    "Database": database,
-    "Design": design,
-    "Markup": markup,
+_CATEGORY_BY_EXTENSION: dict[str, Category] = {
+	ext: category for category in CATEGORIES for ext in category.extensions
 }
+
+
+def category_for(path: str | Path) -> Category:
+	"""Return the category a file belongs to, based on its extension."""
+	return _CATEGORY_BY_EXTENSION.get(Path(path).suffix.lower(), OTHER)

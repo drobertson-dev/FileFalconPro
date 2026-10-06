@@ -1,26 +1,39 @@
 [project]
 name = "filefalconpro"
-version = "0.1.0"
-description = ""
-authors = [{ name = "daver987", email = "daveyalexander@outlook.com" }]
-requires-python = "~=3.12"
+version = "2.0.0"
+description = "Sort, organise and de-duplicate photos, videos and documents."
+authors = [{ name = "drobertson-dev" }]
+license = "MIT"
+requires-python = ">=3.12"
 readme = "README.md"
 dependencies = [
-    "PyQt6-Qt6>=6.7.0,<7",
-    "PyQt6-sip>=13.6.0,<14",
     "PyQt6>=6.7.0,<7",
-    "python-dotenv>=1.0.1,<2",
-    "pydantic>=2.7.2,<3",
-    "ruff>=0.5.1,<0.6",
-    "rich>=13.7.1,<14",
+    "numpy>=2.0",
+    "opencv-python-headless>=4.10",
+    "pillow>=11.0",
+    "pillow-heif>=0.20",
+    "send2trash>=1.8",
+]
+
+[project.urls]
+Homepage = "https://github.com/drobertson-dev/FileFalconPro"
+Documentation = "https://github.com/drobertson-dev/FileFalconPro/tree/master/docs"
+Issues = "https://github.com/drobertson-dev/FileFalconPro/issues"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5.1",
+]
+build = [
+    "pyinstaller>=6.16",
 ]
 
 [tool.uv]
 package = false
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [tool.ruff]
 lint.fixable = ["ALL"]
@@ -30,6 +43,7 @@ lint.select = [
     "I"
 ]
 lint.ignore = [
+    "E101",
     "E203",
     "E501",
     "E231",
