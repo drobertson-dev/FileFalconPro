@@ -208,6 +208,10 @@ either folder simply resets the app.
 That's normal for any app that reads those folders. Click *Allow*; you can change it later
 in *System Settings → Privacy & Security → Files and Folders*.
 
+**Which Macs does the downloadable app run on?**
+Apple silicon Macs with macOS 14 Sonoma or later. On an Intel Mac, build it yourself with
+`make install` (see the README).
+
 **macOS says the app "can't be opened" or is from an unidentified developer.**
 This happens when an app built on one Mac is copied to another, because it isn't signed
 with an Apple Developer ID. Open *System Settings → Privacy & Security*, scroll down and

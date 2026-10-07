@@ -69,6 +69,19 @@ before it touches anything, and keeps a record of every change so you can put th
 
 ## Install
 
+### Download
+
+Get the latest **`.dmg`** from
+[Releases](https://github.com/drobertson-dev/FileFalconPro/releases/latest) — for Apple
+silicon Macs running macOS 14 Sonoma or later. Open it and drag **File Falcon Pro** onto
+**Applications**.
+
+The app isn't signed with an Apple Developer ID, so the first time you open it macOS will
+refuse. Go to **System Settings → Privacy & Security**, scroll down and click
+**Open Anyway** — you only need to do this once.
+
+### Build it yourself
+
 You need [uv](https://docs.astral.sh/uv/) (`brew install uv`).
 
 ```bash
@@ -77,10 +90,10 @@ cd FileFalconPro
 make install
 ```
 
-That builds a standalone **File Falcon Pro.app** and puts it in `/Applications` — launch it
-from Launchpad, Spotlight or the Dock like any other app. Python is bundled inside, so the
-app keeps working even if you delete the project folder. (No `make`? Run
-`./scripts/build_macos.sh --install` instead.)
+That builds a standalone **File Falcon Pro.app** for your Mac and puts it in
+`/Applications` — launch it from Launchpad, Spotlight or the Dock like any other app. Python
+is bundled inside, so the app keeps working even if you delete the project folder. (No
+`make`? Run `./scripts/build_macos.sh --install` instead.)
 
 Prefer to run straight from the source?
 

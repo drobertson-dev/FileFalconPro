@@ -44,7 +44,7 @@ app = BUNDLE(  # noqa: F821
 		"CFBundleShortVersionString": APP_VERSION,
 		"CFBundleVersion": APP_VERSION,
 		"LSApplicationCategoryType": "public.app-category.productivity",
-		"LSMinimumSystemVersion": "12.0",
+		"LSMinimumSystemVersion": "14.0",  # NumPy's Apple silicon wheels need Sonoma
 		"NSHighResolutionCapable": True,
 		"NSRequiresAquaSystemAppearance": False,  # follow light/dark mode
 		"NSHumanReadableCopyright": "MIT License",
